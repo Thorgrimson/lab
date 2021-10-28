@@ -46,14 +46,14 @@ The first directory is for storing the timeseries database:
 
 ::
 
- [isabell@stardust ~]$ mkdir -p var/lib/prometheus
+ [isabell@stardust ~]$ mkdir -p ~/var/lib/prometheus
  [isabell@stardust ~]$
 
 The second directory is for storing the configuration files:
 
 ::
 
- [isabell@stardust ~]$ mkdir etc/prometheus
+ [isabell@stardust ~]$ mkdir -p ~/etc/prometheus
  [isabell@stardust ~]$
 
 
@@ -65,8 +65,8 @@ Find the latest version of Prometheus_ for the operating system ``linux`` and th
 ::
 
  [isabell@stardust ~]$ wget https://github.com/prometheus/prometheus/releases/download/v2.18.1/prometheus-2.18.1.linux-amd64.tar.gz
- [isabell@stardust ~]$ tar xvzf prometheus-2.18.1.linux-amd64.tar.gz
- [isabell@stardust ~]$ cd prometheus-2.18.1.linux-amd64
+ [isabell@stardust ~]$ tar xvzf ~/prometheus-2.18.1.linux-amd64.tar.gz
+ [isabell@stardust ~]$ cd ~/prometheus-2.18.1.linux-amd64
  [isabell@stardust prometheus-2.18.1.linux-amd64]$
 
 Move the binary to ``~/bin`` and the configuration file to ``~/etc/prometheus``.
@@ -75,7 +75,18 @@ Move the binary to ``~/bin`` and the configuration file to ``~/etc/prometheus``.
 
  [isabell@stardust prometheus-2.18.1.linux-amd64]$ mv prometheus ~/bin/
  [isabell@stardust prometheus-2.18.1.linux-amd64]$ mv prometheus.yml ~/etc/prometheus
- [isabell@stardust prometheus-2.18.1.linux-amd64]$
+ [isabell@stardust prometheus-2.18.1.linux-amd64]$ cd ~
+ [isabell@stardust ~]$
+
+Cleanup
+=======
+
+Since we only need the binary and the configuration file we can savely remove the downloaded archive and the extracted directory.
+
+::
+
+ [isabell@stardust ~]$ rm -r ~/prometheus-2.18.1.linux-amd64
+ [isabell@stardust ~]$ rm ~/prometheus-2.18.1.linux-amd64.tar.gz
 
 Configuration
 =============
@@ -100,21 +111,6 @@ Create the file ``~/etc/services.d/prometheus.ini`` with the following content:
   [program:prometheus]
   command=prometheus
     --web.listen-address=localhost:9090
-    --config.file=%(ENV_HOME)s/etc/prometheus/prometheus.yml
-    --storage.tsdb.path=%(ENV_HOME)s/var/lib/prometheus/
-    --storage.tsdb.retention=15d
-    --web.external-url=https://isabell.uber.space/
-    --web.route-prefix=/
-  autostart=yes
-  autorestart=yes
-
-In our example this would be:
-
-.. code-block:: ini
-
-  [program:prometheus]
-  command=prometheus
-    --web.listen-address=localhost:9000
     --config.file=%(ENV_HOME)s/etc/prometheus/prometheus.yml
     --storage.tsdb.path=%(ENV_HOME)s/var/lib/prometheus/
     --storage.tsdb.retention=15d
